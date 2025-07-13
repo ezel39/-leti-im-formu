@@ -1,0 +1,10 @@
+{
+  "name": "leti-im-formu",
+  "version": "1.0.0",
+  "description": "",
+  "main": "netlify/functions/goonder.js",
+  "type": "module",
+  "dependencies": {
+    "pg": "^8.11.3"
+  }
+}

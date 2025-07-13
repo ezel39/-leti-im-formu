@@ -28,10 +28,12 @@ exports.handler = async function (event) {
       body: JSON.stringify({ mesaj: "Veri başarıyla kaydedildi." }),
     };
   } catch (err) {
-    console.error("HATA:", err);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ hata: "Sunucu hatası oluştu." }),
+  console.error("HATA:", err); // Bu satırı zaten var
+  return {
+    statusCode: 500,
+    body: JSON.stringify({ hata: "Sunucu hatası oluştu.", detay: err.message }),
+  };
+  }
     };
   }
 };

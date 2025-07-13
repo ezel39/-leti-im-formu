@@ -1,35 +1,42 @@
-import { Pool } from "pg";
+import { Pool } from 'pg';
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL, // Netlify'de "Environment Variable" olarak eklenmiş olmalı
   ssl: {
-    rejectUnauthorized: false
-  }
+    rejectUnauthorized: false,
+  },
 });
 
-exports.handler = async (event) => {
+export async function handler(event) {
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
-      body: 'Sadece POST isteği destekleniyor.',
+      body: JSON.stringify({ error: 'Sadece POST isteklerine izin verilir.' }),
     };
   }
 
   try {
-    const data = JSON.parse(event.body);
-    const { ad, email, mesaj } = data;
+    const { ad, email, mesaj } = JSON.parse(event.body);
 
-    const query = 'INSERT INTO iletisim_formu (ad, email, mesaj) VALUES ($1, $2, $3)';
-    await pool.query(query, [ad, email, mesaj]);
+    if (!ad || !email || !mesaj) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: 'Tüm alanlar gereklidir.' }),
+      };
+    }
+
+    const query = 'INSERT INTO iletisim (ad, email, mesaj) VALUES ($1, $2, $3)';
+    const values = [ad, email, mesaj];
+    await pool.query(query, values);
 
     return {
       statusCode: 200,
-      body: 'Mesaj başarıyla kaydedildi!',
+      body: JSON.stringify({ message: 'Mesaj başarıyla kaydedildi!' }),
     };
   } catch (error) {
     return {
       statusCode: 500,
-      body: 'Hata oluştu: ' + error.message,
+      body: JSON.stringify({ error: error.message }),
     };
   }
-};
+}

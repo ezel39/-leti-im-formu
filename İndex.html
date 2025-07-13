@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>İletişim Formu</title>
+</head>
+<body>
+  <h1>İletişim Formu</h1>
+  <form id="iletisimFormu">
+    <input type="text" name="ad" placeholder="Adınız" required><br><br>
+    <input type="email" name="email" placeholder="E-posta" required><br><br>
+    <textarea name="mesaj" placeholder="Mesajınız" required></textarea><br><br>
+    <button type="submit">Gönder</button>
+  </form>
+
+  <p id="sonuc"></p>
+
+  <script>
+    document.getElementById("iletisimFormu").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const veri = {
+        ad: formData.get("ad"),
+        email: formData.get("email"),
+        mesaj: formData.get("mesaj")
+      };
+
+      const response = await fetch("/.netlify/functions/gonder", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(veri)
+      });
+
+      const sonuc = await response.text();
+      document.getElementById("sonuc").innerText = sonuc;
+    });
+  </script>
+</body>
+    </html>

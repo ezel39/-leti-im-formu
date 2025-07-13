@@ -31,7 +31,7 @@ exports.handler = async function (event) {
     console.error("HATA:", err);
     return {
       statusCode: 500,
-      body: JSON.stringify({ hata: "Bir şeyler ters gitti." }),
+      body: JSON.stringify({ hata: "Sunucu hatası oluştu." }),
     };
   }
 };

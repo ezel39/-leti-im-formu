@@ -2,7 +2,10 @@ const { Client } = require("pg");
 
 exports.handler = async function (event) {
   if (event.httpMethod !== "POST") {
-    return { statusCode: 405, body: "Sadece POST kabul edilir." };
+    return {
+      statusCode: 405,
+      body: "Sadece POST kabul edilir.",
+    };
   }
 
   const { ad, email, mesaj } = JSON.parse(event.body);
@@ -20,8 +23,15 @@ exports.handler = async function (event) {
     );
     await client.end();
 
-    return { statusCode: 200, body: "Veri kaydedildi." };
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ mesaj: "Veri başarıyla kaydedildi." }),
+    };
   } catch (err) {
-    return { statusCode: 500, body: "Hata: " + err.message };
+    console.error("HATA:", err);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ hata: "Bir şeyler ters gitti." }),
+    };
   }
 };
